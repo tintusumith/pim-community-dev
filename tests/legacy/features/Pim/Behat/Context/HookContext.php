@@ -59,7 +59,7 @@ class HookContext extends PimContext
 
         $purger->purge();
 
-        $this->resetElasticsearchIndex();
+        $this->deleteElasticsearchDocuments();
     }
 
     /**
@@ -205,15 +205,6 @@ class HookContext extends PimContext
     /**
      * @BeforeScenario
      */
-    public function clearRecordedMails()
-    {
-        //TODO
-//        $this->getMainContext()->getMailRecorder()->clear();
-    }
-
-    /**
-     * @BeforeScenario
-     */
     public static function resetPlaceholderValues()
     {
         parent::resetPlaceholderValues();
@@ -292,15 +283,19 @@ class HookContext extends PimContext
     }
 
     /**
-     * Resets the elasticsearch index
+     * Delete all documents in elasticsearch
      */
-    private function resetElasticsearchIndex()
+    private function deleteElasticsearchDocuments()
     {
         $clientRegistry = $this->getService('akeneo_elasticsearch.registry.clients');
         $clients = $clientRegistry->getClients();
 
         foreach ($clients as $client) {
-            $client->resetIndex();
+            $client->deleteByQuery([
+                'query' => [
+                    'match_all' => new \stdClass()
+                ]
+            ]);
         }
     }
 }
