@@ -71,7 +71,7 @@ COPY . .
 COPY .ci/php.ini /usr/local/etc/php/
 COPY .ci/vhost.conf /etc/apache2/sites-available/000-default.conf
 
-RUN touch app/config/parameters.yml \
+RUN cp app/config/parameters.yml.dist app/config/parameters.yml \
     && composer $COMPOSER_COMMAND --no-ansi --optimize-autoloader --no-interaction --no-progress --prefer-dist --no-suggest \
     && bin/console pim:installer:assets --env=prod \
     && bin/console pim:installer:dump-require-paths --env=prod \
