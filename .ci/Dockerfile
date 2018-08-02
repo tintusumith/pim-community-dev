@@ -5,10 +5,6 @@ ARG COMPOSER_COMMAND=update
 ENV COMPOSER_CACHE_DIR=/tmp/composer/cache
 ENV YARN_CACHE_FOLDER=/tmp/yarn
 ENV PIM_DATABASE_HOST=127.0.0.1
-ENV PIM_DATABASE_PORT=3306
-ENV PIM_DATABASE_NAME=akeneo_pim
-ENV PIM_DATABASE_USER=akeneo_pim
-ENV PIM_DATABASE_PASSWORD=changeme
 ENV PIM_INDEX_HOSTS=elastic:changeme@127.0.0.1:9200
 ENV BEHAT_TMPDIR=/var/www/pim/var/cache/tmp
 
@@ -75,8 +71,7 @@ COPY . .
 COPY .ci/php.ini /usr/local/etc/php/
 COPY .ci/vhost.conf /etc/apache2/sites-available/000-default.conf
 
-RUN cp app/config/parameters.yml.dist app/config/parameters.yml \
-    && composer $COMPOSER_COMMAND --no-ansi --optimize-autoloader --no-interaction --no-progress --prefer-dist --no-suggest \
+RUN composer $COMPOSER_COMMAND --no-ansi --optimize-autoloader --no-interaction --no-progress --prefer-dist --no-suggest \
     && bin/console pim:installer:assets --env=prod \
     && bin/console pim:installer:dump-require-paths --env=prod \
     && yarn install \
