@@ -9,8 +9,9 @@ services:
     pim_datagrid.controller.datagrid:
         class: '%pim_datagrid.controller.datagrid.class%'
         arguments:
-            - '@templating'
-            - '@oro_datagrid.datagrid.metadata_parser'
+            - '@oro_datagrid.datagrid.manager'
+            - '@oro_datagrid.datagrid.request_params'
+            - '@router'
 
     pim_datagrid.controller.export:
         abstract: false
