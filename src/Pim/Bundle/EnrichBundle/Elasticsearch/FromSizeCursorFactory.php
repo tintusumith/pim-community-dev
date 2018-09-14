@@ -2,9 +2,11 @@
 
 namespace Pim\Bundle\EnrichBundle\Elasticsearch;
 
+use Akeneo\Pim\Enrichment\Bundle\Elasticsearch\ProductGridCursor;
+use Akeneo\Pim\Enrichment\Component\Product\Grid\Context;
+use Akeneo\Pim\Enrichment\Component\Product\Query\GetRowsFromIdentifiers;
 use Akeneo\Tool\Bundle\ElasticsearchBundle\Client;
 use Akeneo\Tool\Component\StorageUtils\Cursor\CursorFactoryInterface;
-use Akeneo\Tool\Component\StorageUtils\Repository\CursorableRepositoryInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
@@ -23,31 +25,29 @@ class FromSizeCursorFactory implements CursorFactoryInterface
     /** @var string */
     private $indexType;
 
-    /** @var CursorableRepositoryInterface */
-    private $productRepository;
+    /** @var GetRowsFromIdentifiers */
+    private $getProductRowsFromIdentifiers;
 
-    /** @var CursorableRepositoryInterface */
-    private $productModelRepository;
+    /** @var GetRowsFromIdentifiers */
+    private $getProductModelRowsFromIdentifiers;
 
     /**
      * @param Client                        $searchEngine
-     * @param CursorableRepositoryInterface $productRepository
-     * @param CursorableRepositoryInterface $productModelRepository
      * @param int                           $pageSize
      * @param string                        $indexType
      */
     public function __construct(
         Client $searchEngine,
-        CursorableRepositoryInterface $productRepository,
-        CursorableRepositoryInterface $productModelRepository,
+        GetRowsFromIdentifiers $getProductRowsFromIdentifiers,
+        GetRowsFromIdentifiers $getProductModelRowsFromIdentifiers,
         $pageSize,
         $indexType
     ) {
         $this->searchEngine = $searchEngine;
-        $this->productRepository = $productRepository;
-        $this->productModelRepository = $productModelRepository;
         $this->pageSize = $pageSize;
         $this->indexType = $indexType;
+        $this->getProductRowsFromIdentifiers = $getProductRowsFromIdentifiers;
+        $this->getProductModelRowsFromIdentifiers = $getProductModelRowsFromIdentifiers;
     }
 
     /**
@@ -59,11 +59,14 @@ class FromSizeCursorFactory implements CursorFactoryInterface
 
         $queryBuilder['_source'] = array_merge($queryBuilder['_source'], ['document_type']);
 
-        return new FromSizeCursor(
+        $context = new Context($options['locale'], $options['scope'], $options['attributes_to_display'], $options['properties_to_display']);
+
+        return new ProductGridCursor(
             $this->searchEngine,
-            $this->productRepository,
-            $this->productModelRepository,
+            $this->getProductRowsFromIdentifiers,
+            $this->getProductModelRowsFromIdentifiers,
             $queryBuilder,
+            $context,
             $this->indexType,
             $options['page_size'],
             $options['limit'],
@@ -81,20 +84,30 @@ class FromSizeCursorFactory implements CursorFactoryInterface
         $resolver = new OptionsResolver();
         $resolver->setDefined(
             [
+                'locale',
+                'scope',
                 'page_size',
                 'limit',
                 'from',
+                'attributes_to_display',
+                'properties_to_display',
             ]
         );
         $resolver->setDefaults(
             [
                 'page_size' => $this->pageSize,
-                'from' => 0
+                'from' => 0,
+                'attributes_to_display' => [],
+                'properties_to_display' => [],
             ]
         );
+        $resolver->setAllowedTypes('locale', 'string');
+        $resolver->setAllowedTypes('scope', 'string');
         $resolver->setAllowedTypes('page_size', 'int');
         $resolver->setAllowedTypes('limit', 'int');
         $resolver->setAllowedTypes('from', 'int');
+        $resolver->setAllowedTypes('attributes_to_display', 'array');
+        $resolver->setAllowedTypes('properties_to_display', 'array');
 
         $options = $resolver->resolve($options);
 

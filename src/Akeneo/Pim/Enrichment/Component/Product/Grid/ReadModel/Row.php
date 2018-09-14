@@ -41,6 +41,9 @@ class Row
     /** @var null|int */
     private $completeness;
 
+    /** @var array */
+    private $childrenCompleteness;
+
     /** @var string */
     private $documentType;
 
@@ -49,12 +52,6 @@ class Row
 
     /** @var string */
     private $searchId;
-
-    /** @var bool */
-    private $checked;
-
-    /** @var null|bool */
-    private $completeVariantProduct;
 
     /** @var null|string */
     private $parent;
@@ -65,36 +62,34 @@ class Row
     /**
      * @param string             $identifier
      * @param string             $family
-     * @param string[]           $groups
-     * @param bool               $enabled
+     * @param string             $groups
+     * @param bool|null          $enabled
      * @param \DateTimeInterface $created
      * @param \DateTimeInterface $updated
-     * @param null|ScalarValue   $label
+     * @param string             $label
      * @param null|MediaValue    $image
      * @param null|int           $completeness
      * @param string             $documentType
      * @param int                $technicalId
      * @param string             $searchId
-     * @param bool               $checked
-     * @param bool|null          $completeVariantProduct
+     * @param array              $childrenCompleteness
      * @param null|string        $parent
      * @param ValueCollection    $values
      */
     public function __construct(
         string $identifier,
         string $family,
-        array $groups,
-        bool $enabled,
+        string $groups,
+        ?bool $enabled,
         \DateTimeInterface $created,
         \DateTimeInterface $updated,
-        ?ScalarValue $label,
+        string $label, // @todo remove ? who should have the responsibility to transform it into string or get the code if it's null ? the normalizer ?
         ?MediaValue $image,
         ?int $completeness,
+        array $childrenCompleteness, // @todo rename/restructure
         string $documentType,
         int $technicalId,
         string $searchId,
-        ?bool $checked,
-        ?bool $completeVariantProduct,
         ?string $parent,
         ValueCollection $values
     ) {
@@ -110,8 +105,7 @@ class Row
         $this->documentType = $documentType;
         $this->technicalId = $technicalId;
         $this->searchId = $searchId;
-        $this->checked = $checked;
-        $this->completeVariantProduct = $completeVariantProduct;
+        $this->childrenCompleteness = $childrenCompleteness;
         $this->parent = $parent;
         $this->values = $values;
     }
@@ -133,17 +127,17 @@ class Row
     }
 
     /**
-     * @return string[]
+     * @return string
      */
-    public function groups(): array
+    public function groups(): string
     {
         return $this->groups;
     }
 
     /**
-     * @return bool
+     * @return null|bool
      */
-    public function enabled(): bool
+    public function enabled(): ?bool
     {
         return $this->enabled;
     }
@@ -165,9 +159,9 @@ class Row
     }
 
     /**
-     * @return null|ScalarValue
+     * @return string
      */
-    public function label(): ?ScalarValue
+    public function label(): string
     {
         return $this->label;
     }
@@ -181,9 +175,9 @@ class Row
     }
 
     /**
-     * @return int
+     * @return null|int
      */
-    public function completeness(): int
+    public function completeness(): ?int
     {
         return $this->completeness;
     }
@@ -213,19 +207,11 @@ class Row
     }
 
     /**
-     * @return bool
+     * @return array
      */
-    public function checked(): bool
+    public function childrenCompleteness(): array
     {
-        return $this->checked;
-    }
-
-    /**
-     * @return bool|null
-     */
-    public function isCompleteVariantProduct(): ?bool
-    {
-        return $this->completeVariantProduct;
+        return $this->childrenCompleteness;
     }
 
     /**

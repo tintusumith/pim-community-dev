@@ -71,9 +71,15 @@ class ProductQueryBuilderFactory implements ProductQueryBuilderFactoryInterface
     {
         $options = $this->resolveOptions($options);
 
+        /**
+         * @todo: do a specific PQB and PQB factory to avoid to add them attributes_to_display and properties_to_display
+         *          these options are used for the datagrid only
+         */
         $pqbOptions = [
             'locale' => $options['default_locale'],
             'scope'  => $options['default_scope'],
+            'attributes_to_display' => $options['attributes_to_display'],
+            'properties_to_display' => $options['properties_to_display'],
         ];
 
         if (isset($options['limit'])) {
@@ -160,7 +166,9 @@ class ProductQueryBuilderFactory implements ProductQueryBuilderFactoryInterface
             'search_after',
             'search_after_unique_key',
             'limit',
-            'from'
+            'from',
+            'attributes_to_display',
+            'properties_to_display',
         ]);
         $resolver->setDefaults([
             'repository_method'     => 'createQueryBuilder',
@@ -168,6 +176,8 @@ class ProductQueryBuilderFactory implements ProductQueryBuilderFactoryInterface
             'default_locale'        => null,
             'default_scope'         => null,
             'filters'               => [],
+            'attributes_to_display' => [],
+            'properties_to_display' => [],
         ]);
         $resolver->setAllowedTypes('repository_method', 'string');
         $resolver->setAllowedTypes('repository_parameters', 'array');
@@ -179,6 +189,8 @@ class ProductQueryBuilderFactory implements ProductQueryBuilderFactoryInterface
         $resolver->setAllowedTypes('search_after_unique_key', ['string', 'null']);
         $resolver->setAllowedTypes('limit', 'int');
         $resolver->setAllowedTypes('filters', 'array');
+        $resolver->setAllowedTypes('attributes_to_display', 'array');
+        $resolver->setAllowedTypes('properties_to_display', 'array');
         $resolver->setAllowedTypes('from', 'int');
     }
 

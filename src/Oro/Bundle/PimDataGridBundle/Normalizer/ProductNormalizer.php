@@ -56,8 +56,6 @@ class ProductNormalizer implements NormalizerInterface, NormalizerAwareInterface
 
         $context = array_merge(['filter_types' => ['pim.transform.product_value.structured']], $context);
         $data = [];
-        $locale = current($context['locales']);
-        $scope = current($context['channels']);
 
         $data['identifier'] = $product->identifier();
         $data['family'] = $product->family();
@@ -66,31 +64,15 @@ class ProductNormalizer implements NormalizerInterface, NormalizerAwareInterface
         $data['values'] = $this->normalizeValues($product->values(), $format, $context);
         $data['created'] = $this->normalizer->normalize($product->created(), $format, $context);
         $data['updated'] = $this->normalizer->normalize($product->updated(), $format, $context);
-        $data['label'] = $this->normalizer->normalize($product->label());
+        $data['label'] = $product->label();
         $data['image'] = $this->normalizeImage($product->image(), $context);
         $data['completeness'] = $product->completeness();
         $data['document_type'] = $product->documentType();
         $data['technical_id'] = $product->technicalId();
         $data['search_id'] = $product->searchId();
-        $data['is_checked'] = $product->checked();
-        $data['complete_variant_product'] = $product->isCompleteVariantProduct();
+        $data['is_checked'] = false; // @todo check if it's still used
+        $data['complete_variant_product'] = $product->childrenCompleteness();
         $data['parent'] = $product->parent();
-
-        //$data['family'] = $this->getFamilyLabel($product, $locale);
-        //$data['groups'] = $this->getGroupsLabels($product, $locale);
-        //$data['enabled'] = (bool) $product->isEnabled();
-        //$data['values'] = $this->normalizeValues($product->getValues(), $format, $context);
-        //$data['created'] = $this->normalizer->normalize($product->getCreated(), $format, $context);
-        //$data['updated'] = $this->normalizer->normalize($product->getUpdated(), $format, $context);
-        //$data['label'] = $product->getLabel($locale, $scope);
-        //$data['image'] = $this->normalizeImage($product->getImage(), $context);
-        //$data['completeness'] = $this->getCompleteness($product, $context);
-        //$data['document_type'] = IdEncoder::PRODUCT_TYPE;
-        //$data['technical_id'] = $product->getId();
-        //$data['search_id'] = IdEncoder::encode($data['document_type'], $data['technical_id']);
-        //$data['is_checked'] = false;
-        //$data['complete_variant_product'] = null;
-        //$data['parent'] = $this->getParentCode($product);
 
         return $data;
     }

@@ -58,7 +58,7 @@ class ProductDatasource extends Datasource
     {
         $attributeIdsToDisplay = $this->getConfiguration('displayed_attribute_ids');
         $attributes = $this->getConfiguration('attributes_configuration');
-        $attributeCodesToFilter = $this->getAttributeCodesToFilter($attributeIdsToDisplay, $attributes);
+        $attributeCodesToFilter = [];
         $this->filterEntityWithValuesSubscriber->configure(
             FilterEntityWithValuesSubscriberConfiguration::filterEntityValues($attributeCodesToFilter)
         );
@@ -106,6 +106,11 @@ class ProductDatasource extends Datasource
         $factoryConfig['from'] = null !== $this->getConfiguration('from', false) ?
             (int) $this->getConfiguration('from', false) : 0;
 
+        $factoryConfig['attributes_to_display'] = $this->getAttributeCodesToDisplay();
+
+        $displayedColumns = (array) $this->getConfiguration('displayed_columns', false);
+        $factoryConfig['properties_to_display'] = array_diff($displayedColumns, $factoryConfig['attributes_to_display']);
+
         $this->pqb = $this->factory->create($factoryConfig);
         $this->qb = $this->pqb->getQueryBuilder();
 
@@ -147,13 +152,13 @@ class ProductDatasource extends Datasource
     }
 
     /**
-     * @param array $attributeIdsToDisplay
-     * @param array $attributes
-     *
      * @return array array of attribute codes
      */
-    private function getAttributeCodesToFilter(array $attributeIdsToDisplay, array $attributes): array
+    private function getAttributeCodesToDisplay(): array
     {
+        $attributeIdsToDisplay = $this->getConfiguration('displayed_attribute_ids');
+        $attributes = $this->getConfiguration('attributes_configuration');
+
         $attributeCodes = [];
         foreach ($attributes as $attribute) {
             if (in_array($attribute['id'], $attributeIdsToDisplay)) {

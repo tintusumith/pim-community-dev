@@ -31,13 +31,15 @@ class ProductQueryBuilderFromSizeOptionsResolver implements ProductQueryBuilderO
     protected function createOptionsResolver()
     {
         $resolver = new OptionsResolver();
-        $resolver->setDefined(['locale', 'scope', 'limit', 'from']);
+        $resolver->setDefined(['locale', 'scope', 'limit', 'from', 'attributes_to_display', 'properties_to_display']);
         $resolver->setRequired(['locale', 'scope', 'limit']);
 
         $resolver->setAllowedTypes('locale', ['string', 'null']);
         $resolver->setAllowedTypes('scope', ['string', 'null']);
         $resolver->setAllowedTypes('limit', 'int');
         $resolver->setAllowedTypes('from', 'int');
+        $resolver->setAllowedTypes('attributes_to_display', 'array');
+        $resolver->setAllowedTypes('properties_to_display', 'array');
 
         return $resolver;
     }

@@ -59,8 +59,48 @@ services:
         class: 'Pim\Bundle\DataGridBundle\Storage\Sql\GetProductRowsFromIdentifiers'
         arguments:
             - '@database_connection'
-
+            - '@akeneo.pim.enrichment.query.get_product_groups_labels'
+            - '@akeneo.pim.enrichment.query.get_product_values'
+            - '@akeneo.pim.enrichment.query.get_product_completeness_ratios'
 
     akeneo.pim.enrichment.query.get_product_model_rows_from_identifiers:
         public: false
         class: 'Pim\Bundle\DataGridBundle\Storage\Sql\GetProductModelRowsFromIdentifiers'
+        arguments:
+            - '@database_connection'
+            - '@akeneo.pim.enrichment.query.get_product_model_children_completeness'
+            - '@akeneo.pim.enrichment.query.get_product_model_values'
+
+    akeneo.pim.enrichment.query.get_product_groups_labels:
+        public: false
+        class: Pim\Bundle\DataGridBundle\Storage\Sql\GetProductGroupsLabels
+        arguments:
+            - '@database_connection'
+
+    akeneo.pim.enrichment.query.get_product_completeness_ratios:
+        public: false
+        class: Pim\Bundle\DataGridBundle\Storage\Sql\GetProductCompletenessRatios
+        arguments:
+            - '@database_connection'
+
+    akeneo.pim.enrichment.query.get_product_model_children_completeness:
+        public: false
+        class: Pim\Bundle\DataGridBundle\Storage\Sql\GetProductModelsChildrenCompleteness
+        arguments:
+            - '@database_connection'
+
+    akeneo.pim.enrichment.query.get_product_values:
+        public: false
+        class: Pim\Bundle\DataGridBundle\Storage\Sql\GetProductValues
+        arguments:
+            - '@database_connection'
+            - '@pim_catalog.repository.attribute'
+            - '@pim_catalog.factory.value'
+
+    akeneo.pim.enrichment.query.get_product_model_values:
+        public: false
+        class: Pim\Bundle\DataGridBundle\Storage\Sql\GetProductModelValues
+        arguments:
+            - '@database_connection'
+            - '@pim_catalog.repository.attribute'
+            - '@pim_catalog.factory.value'
