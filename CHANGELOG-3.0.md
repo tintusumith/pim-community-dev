@@ -232,7 +232,7 @@
 - Move `Pim\Component\Catalog\Model\AbstractMetric` to `Akeneo\Pim\Enrichment\Component\Product\Model\AbstractMetric`
 - Move `Pim\Component\Catalog\Model\AbstractProductPrice` to `Akeneo\Pim\Enrichment\Component\Product\Model\AbstractProductPrice`
 - Move `Pim\Component\Catalog\Model\AbstractValue` to `Akeneo\Pim\Enrichment\Component\Product\Model\AbstractValue`
-- Move `Pim\Component\Catalog\Model\CommonAttributeCollection` to `Akeneo\Pim\Enrichment\Component\Product\Model\CommonAttributeCollection`
+- Move `Pim\Component\Catalog\Model\CommonAttributeCollection` to `Akeneo\Pim\Structure\Component\Model\CommonAttributeCollection`
 - Move `Pim\Component\Catalog\Model\EntityWithAssociationsInterface` to `Akeneo\Pim\Enrichment\Component\Product\Model\EntityWithAssociationsInterface`
 - Move `Pim\Component\Catalog\Model\EntityWithFamilyInterface` to `Akeneo\Pim\Enrichment\Component\Product\Model\EntityWithFamilyInterface`
 - Move `Pim\Component\Catalog\Model\EntityWithFamilyVariantInterface` to `Akeneo\Pim\Enrichment\Component\Product\Model\EntityWithFamilyVariantInterface`
@@ -1158,3 +1158,4 @@
 - Change constructor of `Akeneo\Pim\Enrichment\Component\Product\Connector\Reader\Database\MassEdit\FilteredProductReader`, remove arguments `Akeneo\Pim\Enrichment\Component\Product\CompletenessManager` and last argument `bool`
 - Change constructor of `Akeneo\Pim\Enrichment\Component\Product\Connector\Reader\Database\MassEdit\ProductAndProductModelReader`, remove argument `Akeneo\Pim\Enrichment\Component\Product\CompletenessManager`
 - Change constructor of `Akeneo\Pim\Enrichment\Component\Product\Connector\Reader\Database\MassEdit\FilteredProductAndProductModelReader`, remove arguments `Akeneo\Pim\Enrichment\Component\Product\CompletenessManager` and fifth argument `bool`
+- Change constructor of `Akeneo\Tool\Component\StorageUtils\Saver\SaverInterface\FamilySaver`, remove second argument `Akeneo\Pim\Enrichment\Component\Product\Manager\CompletenessManager`
